@@ -12,7 +12,6 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.hyww9ng.mongodb.net/?retryWrites=true&w=majority`;
 
-
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -20,6 +19,7 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+console.log(process.env.ACCESS_TOKEN_SECRET)
 
 const verifyJWT = (req, res, next) => {
   const authorization = req.headers.authorization;
@@ -27,7 +27,6 @@ const verifyJWT = (req, res, next) => {
     return res.status(401).send({ error: true, message: "Forbidden access" });
   }
   const token = authorization.split(" ")[1];
-
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).send({ error: true, message: "Unauthorized access" });
@@ -53,13 +52,58 @@ async function run() {
       next();
     };
 
+    app.post("/JWT", async (req, res) => {
+      const { email } = req.body;
     
+      if (!email) {
+        return res.status(400).send({ error: true, message: "Email is required" });
+      }
+    
+      console.log("Received request for JWT with email:", email);
+    
+      try {
+        const query = { email: email };
+        const user = await userCollection.findOne(query);
+    
+        if (!user) {
+          console.log("User not found:", email);
+          return res.status(403).send({ error: true, message: "User not found" });
+        }
+    
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+        return res.send({ token });
+      } catch (error) {
+        console.error("Error finding user or generating token:", error);
+        res.status(500).send({ error: true, message: "Internal Server Error" });
+      }
+    });
+    
+
+    app.post("/signup", async (req, res) => {
+      const { name, email, password } = req.body;
+      
+      // Check if the user already exists
+      const existingUser = await userCollection.findOne({ email });
+      if (existingUser) {
+        return res.status(400).send({ error: "User already exists" });
+      }
+
+      // Save new user to the database
+      const result = await userCollection.insertOne({ name, email, password, role: "user" });
+      if (result.insertedId) {
+        // Generate JWT token
+        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+        return res.send({ message: "User created successfully", token });
+      } else {
+        return res.status(500).send({ error: "Failed to create user" });
+      }
+    });
+
     app.get("/products", async (req, res) => {
       const result = await productsCollection.find().toArray();
       res.send(result);
     });
 
-    
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
 
@@ -82,48 +126,47 @@ async function run() {
     });
 
     app.get('/search', async (req, res) => {
-        const { query } = req.query;
-      
-        if (!query) {
-          return res.status(400).json({ message: 'Query parameter is required' });
-        }
-      
-        try {
-          const products = await productsCollection.find({
-            $or: [
-              { brand: { $regex: query, $options: 'i' } },
-              { category: { $regex: query, $options: 'i' } },
-            //   { description: { $regex: query, $options: 'i' } },
-              { title: { $regex: query, $options: 'i' } }
-            ]
-          }).toArray();
-          res.json(products);
-        } catch (error) {
-          res.status(500).json({ message: 'Server error', error });
-        }
+      const { query } = req.query;
+      if (!query) {
+        return res.status(400).json({ message: 'Query parameter is required' });
+      }
+
+      try {
+        const products = await productsCollection.find({
+          $or: [
+            { brand: { $regex: query, $options: 'i' } },
+            { category: { $regex: query, $options: 'i' } },
+            { title: { $regex: query, $options: 'i' } }
+          ]
+        }).toArray();
+        res.json(products);
+      } catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+      }
     });
-    
-    
-
-  
-
 
     app.post("/user", async (req, res) => {
-      const userInfo = req.body;
-      const query = { email: userInfo.email };
+      const { name, email, password } = req.body;
+      const query = { email: email };
       const existingUser = await userCollection.findOne(query);
       if (existingUser) {
         return res.send({ message: "User already exists" });
       }
-      const result = await userCollection.insertOne(userInfo);
-      res.send(result);
+      const result = await userCollection.insertOne({ name, email, password, role: "user" });
+      if (result.insertedId) {
+        res.send({ message: "User created successfully" });
+      } else {
+        res.status(500).send({ error: true, message: "Failed to create user" });
+      }
     });
+    
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
-   
+    // Do nothing
   }
 }
+
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
