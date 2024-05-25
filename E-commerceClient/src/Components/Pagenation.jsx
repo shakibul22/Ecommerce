@@ -1,5 +1,6 @@
 import React from "react";
 
+// eslint-disable-next-line react/prop-types
 const PaginationComponent = ({ currentPage, totalPages, onPageChange }) => {
   const pageNumbers = [];
 
