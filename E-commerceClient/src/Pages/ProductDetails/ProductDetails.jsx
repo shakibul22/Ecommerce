@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import  { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { AuthContext } from "../../Providers/AuthProvider";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const { user  } = useContext(AuthContext);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/products/${id}`);
+        const response = await fetch(`/products/${id}`);
         const data = await response.json();
         console.log(data);
         setProduct(data);
@@ -119,6 +120,7 @@ const ProductDetails = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };

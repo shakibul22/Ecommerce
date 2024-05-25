@@ -1,4 +1,12 @@
+import { useContext } from "react";
+import { AuthContext } from "../Providers/AuthProvider";
+
 const Header = () => {
+  const { user, logOut } = useContext(AuthContext)
+  console.log(user);
+  const handleLogout=()=>{
+    logOut();
+  }
   return (
     <div className="top-0 py-1 lg:py-2 w-full bg-transparent lg:relative z-50 ">
       <nav className="z-10 sticky top-0 left-0 right-0 w-full  xl:container mx-auto  py-2.5 lg:border-none lg:py-4">
@@ -25,18 +33,21 @@ const Header = () => {
             </ul>
           </div>
           <div className="hidden lg:flex lg:items-center gap-x-2">
-            <a
-              href="/signup"
-              className="flex items-center  justify-center px-6 py-2.5 font-semibold"
-            >
-              Sign up
-            </a>
-            <a
-              href="/signin"
-              className="flex items-center justify-center rounded-md bg-[#4A3BFF] text-white px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
-            >
-              Login
-            </a>
+            {user ? (
+              <p onClick={handleLogout}
+               
+                className="flex items-center  justify-center px-6 py-2.5 font-semibold"
+              >
+                Logout
+              </p>
+            ) : (
+              <a
+                href="/signin"
+                className="flex items-center justify-center rounded-md bg-[#4A3BFF] text-white px-6 py-2.5 font-semibold hover:shadow-lg hover:drop-shadow transition duration-200"
+              >
+                Login
+              </a>
+            )}
           </div>
           <div className="flex items-center justify-center lg:hidden">
             <button className="focus:outline-none ">
