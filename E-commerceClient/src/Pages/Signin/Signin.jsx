@@ -2,9 +2,12 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Providers/AuthProvider";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signin = () => {
   const { user, googleUser, signIn } = useContext(AuthContext);
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -25,7 +28,7 @@ const Signin = () => {
       const user = userCredential.user;
       console.log(user);
       toast.success("Login successful!", toastOptions);
-
+      navigate('/');
       setFormData({
         email: "",
         password: "",
@@ -38,13 +41,34 @@ const Signin = () => {
 
   const handleGoogle = () => {
     googleUser()
-      .then((result) => {
+      .then(async (result) => {
         const googleUser = result.user;
-        toast.success("Google login successful!", toastOptions);
+      
+        const userInfo = {
+          name: googleUser.displayName,
+          email: googleUser.email,
+          password: googleUser.pass,
+          role: "user",
+        };
+       
+        const response = await axios.post(
+          "http://localhost:5000/user",
+          userInfo
+        );
+
+
+        const tokenResponse = await axios.post("http://localhost:5000/JWT", {
+          email: googleUser.email,
+        });
+    
+        const { token } = tokenResponse.data;
+        localStorage.setItem("access-token", token);
+        navigate('/')
+        toast.success("Google login successful!");
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Google login failed!", toastOptions);
+        toast.error("Google login failed!");
       });
   };
 

@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState } from "react";
-
 import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
@@ -21,10 +20,11 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const googleProvider = new GoogleAuthProvider();
-  const updateUserProfile = (name, photoUrl) => {
+
+  const updateUserProfile = (name) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
-      photoURL: photoUrl,
+     
     });
   };
 
@@ -32,7 +32,9 @@ const AuthProvider = ({ children }) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
+
   const googleUser = () => {
+    setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
@@ -48,28 +50,30 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log(currentUser);
       setUser(currentUser);
 
       if (currentUser) {
-        axios
-          .post("http://localhost:5000/JWT", {
-            email: currentUser.email,
-          })
-          .then((data) => {
-            // console.log(data.data.token);
-            localStorage.setItem("access-token", data.data.token);
-            setLoading(false);
-          });
+        axios.post("http://localhost:5000/JWT", {
+          email: currentUser.email,
+        })
+        .then((data) => {
+          localStorage.setItem("access-token", data.data.token);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching JWT:", error);
+          setLoading(false);
+        });
+      
       } else {
         localStorage.removeItem("access-token");
+        setLoading(false);
       }
     });
     return () => {
       unsubscribe();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [auth]);
+  }, []);
 
   const authInfo = {
     user,
@@ -82,7 +86,9 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
