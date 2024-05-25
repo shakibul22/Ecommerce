@@ -3,6 +3,7 @@ import axios from "axios";
 import AllProductCard from "../../Components/AllProductsCard";
 import PaginationComponent from "../../Components/Pagenation";
 import Filter from "../../Components/Filter";
+import { baseUrl } from "../../BaseUrl/baseUrl";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -18,7 +19,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/products");
+        const res = await axios.get(`${baseUrl}/products`);
         setProducts(res.data);
         setFilteredResults(res.data); // Initialize filteredResults with all products
       } catch (error) {

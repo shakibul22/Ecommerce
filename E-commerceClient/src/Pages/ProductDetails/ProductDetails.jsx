@@ -1,6 +1,7 @@
 import  { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AuthContext } from "../../Providers/AuthProvider";
+import { baseUrl } from "../../BaseUrl/baseUrl";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -10,7 +11,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`/products/${id}`);
+        const response = await fetch(`${baseUrl}/products/${id}`);
         const data = await response.json();
         console.log(data);
         setProduct(data);
