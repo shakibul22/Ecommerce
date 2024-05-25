@@ -53,31 +53,12 @@ async function run() {
     };
 
     app.post("/JWT", async (req, res) => {
-      const { email } = req.body;
-    
-      if (!email) {
-        return res.status(400).send({ error: true, message: "Email is required" });
-      }
-    
-      console.log("Received request for JWT with email:", email);
-    
-      try {
-        const query = { email: email };
-        const user = await userCollection.findOne(query);
-    
-        if (!user) {
-          console.log("User not found:", email);
-          return res.status(403).send({ error: true, message: "User not found" });
-        }
-    
-        const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
-        return res.send({ token });
-      } catch (error) {
-        console.error("Error finding user or generating token:", error);
-        res.status(500).send({ error: true, message: "Internal Server Error" });
-      }
+      const userInfo = req.body;
+     
+      const token =jwt.sign(userInfo,process.env.ACCESS_TOKEN_SECRET,{expiresIn:"10h"})
+      console.log(token);
+      res.send({token});
     });
-    
 
     app.post("/signup", async (req, res) => {
       const { name, email, password } = req.body;
