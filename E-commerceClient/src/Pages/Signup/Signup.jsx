@@ -48,12 +48,18 @@ const Signup = () => {
         role: "user",
       };
 
-      const response = await axios.post("http://localhost:5000/user", userInfo);
+      const response = await axios.post(
+        "https://e-commerce-server-pink.vercel.app/user",
+        userInfo
+      );
       console.log("User information sent to backend", response.data);
 
-      const tokenResponse = await axios.post("http://localhost:5000/JWT", {
-        email: user.email,
-      });
+      const tokenResponse = await axios.post(
+        "https://e-commerce-server-pink.vercel.app/JWT",
+        {
+          email: user.email,
+        }
+      );
       console.log(tokenResponse);
       const { token } = tokenResponse.data;
       localStorage.setItem("access-token", token);
@@ -75,27 +81,29 @@ const Signup = () => {
     googleUser()
       .then(async (result) => {
         const googleUser = result.user;
-      
+
         const userInfo = {
           name: googleUser.displayName,
           email: googleUser.email,
           password: googleUser.pass,
           role: "user",
         };
-       
+
         const response = await axios.post(
-          "http://localhost:5000/user",
+          "https://e-commerce-server-pink.vercel.app/user",
           userInfo
         );
 
+        const tokenResponse = await axios.post(
+          "https://e-commerce-server-pink.vercel.app/JWT",
+          {
+            email: googleUser.email,
+          }
+        );
 
-        const tokenResponse = await axios.post("http://localhost:5000/JWT", {
-          email: googleUser.email,
-        });
-    
         const { token } = tokenResponse.data;
         localStorage.setItem("access-token", token);
-        navigate('/')
+        navigate("/");
         toast.success("Google login successful!");
       })
       .catch((error) => {

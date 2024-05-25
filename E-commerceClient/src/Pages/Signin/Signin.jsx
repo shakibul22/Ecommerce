@@ -52,13 +52,16 @@ const Signin = () => {
         };
 
         const response = await axios.post(
-          "http://localhost:5000/user",
+          "https://e-commerce-server-pink.vercel.appuser",
           userInfo
         );
 
-        const tokenResponse = await axios.post("http://localhost:5000/JWT", {
-          email: googleUser.email,
-        });
+        const tokenResponse = await axios.post(
+          "https://e-commerce-server-pink.vercel.appJWT",
+          {
+            email: googleUser.email,
+          }
+        );
 
         const { token } = tokenResponse.data;
         localStorage.setItem("access-token", token);

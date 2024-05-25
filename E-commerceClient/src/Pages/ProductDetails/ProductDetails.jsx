@@ -12,7 +12,9 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/products/${id}`);
+        const response = await fetch(
+          `https://e-commerce-server-pink.vercel.app/products/${id}`
+        );
         const data = await response.json();
         setProduct(data);
         setLoading(false);
@@ -38,7 +40,7 @@ const ProductDetails = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/products/${id}/reviews`,
+        `https://e-commerce-server-pink.vercel.app/products/${id}/reviews`,
         {
           method: "POST",
           headers: {
@@ -103,7 +105,9 @@ const ProductDetails = () => {
               </div>
               <div>
                 <span className="font-bold">Availability:</span>
-                <span>{product.availability ? "In Stock" : "Out of Stock"}</span>
+                <span>
+                  {product.availability ? "In Stock" : "Out of Stock"}
+                </span>
               </div>
             </div>
           </div>

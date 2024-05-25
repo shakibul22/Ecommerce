@@ -24,7 +24,6 @@ const AuthProvider = ({ children }) => {
   const updateUserProfile = (name) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
-     
     });
   };
 
@@ -53,18 +52,18 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       if (currentUser) {
-        axios.post("http://localhost:5000/JWT", {
-          email: currentUser.email,
-        })
-        .then((data) => {
-          localStorage.setItem("access-token", data.data.token);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching JWT:", error);
-          setLoading(false);
-        });
-      
+        axios
+          .post("https://e-commerce-server-pink.vercel.app/JWT", {
+            email: currentUser.email,
+          })
+          .then((data) => {
+            localStorage.setItem("access-token", data.data.token);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching JWT:", error);
+            setLoading(false);
+          });
       } else {
         localStorage.removeItem("access-token");
         setLoading(false);
@@ -86,9 +85,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 
