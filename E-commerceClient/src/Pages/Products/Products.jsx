@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import axios from "axios";
 import AllProductCard from "../../Components/AllProductsCard";
 import PaginationComponent from "../../Components/Pagenation";
