@@ -18,7 +18,7 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/products");
+        const res = await axios.get("https://e-commerce-server-pink.vercel.app/products");
         setProducts(res.data);
         setFilteredResults(res.data); // Initialize filteredResults with all products
       } catch (error) {
