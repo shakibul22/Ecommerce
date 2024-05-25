@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AllProductCard from "../../Components/AllProductsCard";
 import PaginationComponent from "../../Components/Pagenation";
@@ -18,7 +18,9 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("https://e-commerce-server-pink.vercel.app/products");
+        const res = await axios.get(
+          "https://e-commerce-server-sandy.vercel.app/products"
+        );
         setProducts(res.data);
         setFilteredResults(res.data); // Initialize filteredResults with all products
       } catch (error) {

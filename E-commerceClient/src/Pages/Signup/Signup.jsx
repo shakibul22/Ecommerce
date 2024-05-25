@@ -49,13 +49,13 @@ const Signup = () => {
       };
 
       const response = await axios.post(
-        "https://e-commerce-server-pink.vercel.app/user",
+        "https://e-commerce-server-sandy.vercel.app/user",
         userInfo
       );
       console.log("User information sent to backend", response.data);
 
       const tokenResponse = await axios.post(
-        "https://e-commerce-server-pink.vercel.app/JWT",
+        "https://e-commerce-server-sandy.vercel.app/JWT",
         {
           email: user.email,
         }
@@ -90,12 +90,12 @@ const Signup = () => {
         };
 
         const response = await axios.post(
-          "https://e-commerce-server-pink.vercel.app/user",
+          "https://e-commerce-server-sandy.vercel.app/user",
           userInfo
         );
 
         const tokenResponse = await axios.post(
-          "https://e-commerce-server-pink.vercel.app/JWT",
+          "https://e-commerce-server-sandy.vercel.app/JWT",
           {
             email: googleUser.email,
           }

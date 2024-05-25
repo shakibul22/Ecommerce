@@ -1,1 +1,1 @@
-export const baseUrl='https://e-commerce-server-kh4xskwi5-shakibul22s-projects.vercel.app';
+export const baseUrl='https://e-commerce-server-sandy.vercel.app/';

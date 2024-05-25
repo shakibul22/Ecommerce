@@ -52,12 +52,12 @@ const Signin = () => {
         };
 
         const response = await axios.post(
-          "https://e-commerce-server-pink.vercel.app/user",
+          "https://e-commerce-server-sandy.vercel.app/user",
           userInfo
         );
 
         const tokenResponse = await axios.post(
-          "https://e-commerce-server-pink.vercel.app/JWT",
+          "https://e-commerce-server-sandy.vercel.app/JWT",
           {
             email: googleUser.email,
           }

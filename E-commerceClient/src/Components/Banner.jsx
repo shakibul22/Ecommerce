@@ -12,7 +12,7 @@ const Banner = () => {
     // console.log(searchTerm);
     try {
       const response = await axios.get(
-        `https://e-commerce-server-pink.vercel.app/search?query=${searchTerm}`
+        `https://e-commerce-server-sandy.vercel.app/search?query=${searchTerm}`
       );
       setSearchResults(response.data);
       const encodedSearchTerm = encodeURIComponent(searchTerm);

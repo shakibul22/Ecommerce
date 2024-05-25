@@ -13,7 +13,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await fetch(
-          `https://e-commerce-server-pink.vercel.app/products/${id}`
+          `https://e-commerce-server-sandy.vercel.app/products/${id}`
         );
         const data = await response.json();
         setProduct(data);
@@ -40,7 +40,7 @@ const ProductDetails = () => {
 
     try {
       const response = await fetch(
-        `https://e-commerce-server-pink.vercel.app/products/${id}/reviews`,
+        `https://e-commerce-server-sandy.vercel.app/products/${id}/reviews`,
         {
           method: "POST",
           headers: {

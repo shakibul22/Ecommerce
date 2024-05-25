@@ -53,7 +53,7 @@ const AuthProvider = ({ children }) => {
 
       if (currentUser) {
         axios
-          .post("https://e-commerce-server-pink.vercel.app/JWT", {
+          .post("https://e-commerce-server-sandy.vercel.app/JWT", {
             email: currentUser.email,
           })
           .then((data) => {
